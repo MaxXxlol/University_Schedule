@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="UniversityDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CourseSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Teacher_Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="CourseStudent">
+          <Key>
+            <PropertyRef Name="Course_Id" />
+            <PropertyRef Name="Student_Id" />
+          </Key>
+          <Property Name="Course_Id" Type="int" Nullable="false" />
+          <Property Name="Student_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StudentSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FIO" Type="nvarchar" MaxLength="500" />
+          <Property Name="Grade" Type="int" />
+        </EntityType>
+        <EntityType Name="TeacherSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FIO" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <Association Name="FK_CourseStudent_Course">
+          <End Role="CourseSet" Type="Self.CourseSet" Multiplicity="1" />
+          <End Role="CourseStudent" Type="Self.CourseStudent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CourseSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CourseStudent">
+              <PropertyRef Name="Course_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourseStudent_Student">
+          <End Role="StudentSet" Type="Self.StudentSet" Multiplicity="1" />
+          <End Role="CourseStudent" Type="Self.CourseStudent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StudentSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CourseStudent">
+              <PropertyRef Name="Student_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CourseTeacher">
+          <End Role="TeacherSet" Type="Self.TeacherSet" Multiplicity="1" />
+          <End Role="CourseSet" Type="Self.CourseSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TeacherSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CourseSet">
+              <PropertyRef Name="Teacher_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="UniversityDBModelStoreContainer">
+          <EntitySet Name="CourseSet" EntityType="Self.CourseSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CourseStudent" EntityType="Self.CourseStudent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StudentSet" EntityType="Self.StudentSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TeacherSet" EntityType="Self.TeacherSet" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CourseStudent_Course" Association="Self.FK_CourseStudent_Course">
+            <End Role="CourseSet" EntitySet="CourseSet" />
+            <End Role="CourseStudent" EntitySet="CourseStudent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourseStudent_Student" Association="Self.FK_CourseStudent_Student">
+            <End Role="StudentSet" EntitySet="StudentSet" />
+            <End Role="CourseStudent" EntitySet="CourseStudent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CourseTeacher" Association="Self.FK_CourseTeacher">
+            <End Role="TeacherSet" EntitySet="TeacherSet" />
+            <End Role="CourseSet" EntitySet="CourseSet" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UniversityDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CourseSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Teacher_Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TeacherSet" Relationship="Self.FK_CourseTeacher" FromRole="CourseSet" ToRole="TeacherSet" />
+          <NavigationProperty Name="StudentSet" Relationship="Self.CourseStudent" FromRole="CourseSet" ToRole="StudentSet" />
+        </EntityType>
+        <EntityType Name="StudentSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FIO" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Grade" Type="Int32" />
+          <NavigationProperty Name="CourseSet" Relationship="Self.CourseStudent" FromRole="StudentSet" ToRole="CourseSet" />
+        </EntityType>
+        <EntityType Name="TeacherSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FIO" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CourseSet" Relationship="Self.FK_CourseTeacher" FromRole="TeacherSet" ToRole="CourseSet" />
+        </EntityType>
+        <Association Name="FK_CourseTeacher">
+          <End Role="TeacherSet" Type="Self.TeacherSet" Multiplicity="1" />
+          <End Role="CourseSet" Type="Self.CourseSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TeacherSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CourseSet">
+              <PropertyRef Name="Teacher_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CourseStudent">
+          <End Role="CourseSet" Type="Self.CourseSet" Multiplicity="*" />
+          <End Role="StudentSet" Type="Self.StudentSet" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="UniversityDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CourseSet" EntityType="Self.CourseSet" />
+          <EntitySet Name="StudentSet" EntityType="Self.StudentSet" />
+          <EntitySet Name="TeacherSet" EntityType="Self.TeacherSet" />
+          <AssociationSet Name="FK_CourseTeacher" Association="Self.FK_CourseTeacher">
+            <End Role="TeacherSet" EntitySet="TeacherSet" />
+            <End Role="CourseSet" EntitySet="CourseSet" />
+          </AssociationSet>
+          <AssociationSet Name="CourseStudent" Association="Self.CourseStudent">
+            <End Role="CourseSet" EntitySet="CourseSet" />
+            <End Role="StudentSet" EntitySet="StudentSet" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="UniversityDBModelStoreContainer" CdmEntityContainer="UniversityDBEntities">
+          <EntitySetMapping Name="CourseSet">
+            <EntityTypeMapping TypeName="UniversityDBModel.CourseSet">
+              <MappingFragment StoreEntitySet="CourseSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Teacher_Id" ColumnName="Teacher_Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StudentSet">
+            <EntityTypeMapping TypeName="UniversityDBModel.StudentSet">
+              <MappingFragment StoreEntitySet="StudentSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FIO" ColumnName="FIO" />
+                <ScalarProperty Name="Grade" ColumnName="Grade" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TeacherSet">
+            <EntityTypeMapping TypeName="UniversityDBModel.TeacherSet">
+              <MappingFragment StoreEntitySet="TeacherSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FIO" ColumnName="FIO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CourseStudent" TypeName="UniversityDBModel.CourseStudent" StoreEntitySet="CourseStudent">
+            <EndProperty Name="CourseSet">
+              <ScalarProperty Name="Id" ColumnName="Course_Id" />
+            </EndProperty>
+            <EndProperty Name="StudentSet">
+              <ScalarProperty Name="Id" ColumnName="Student_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
