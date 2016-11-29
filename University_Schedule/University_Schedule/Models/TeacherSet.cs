@@ -11,17 +11,37 @@ namespace University_Schedule.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.Runtime.Serialization;
+         
+    [DataContract]
     public partial class TeacherSet
     {
         public TeacherSet()
         {
             this.CourseSet = new HashSet<CourseSet>();
         }
-    
+        [DataMember]
         public int Id { get; set; }
+        [DataMember]
         public string FIO { get; set; }
-    
+
         public virtual ICollection<CourseSet> CourseSet { get; set; }
+
+        public TeacherSet(int id, string fio)
+        {
+            Id = id;
+            FIO = fio;
+            CourseSet = new HashSet<CourseSet>();
+        }
+
+        public void AddCourse(CourseSet addon)
+        {
+            CourseSet.Add(addon);
+        }
+
+        public void UpdateTeacherSet(string fio)
+        {
+            FIO = fio;
+        }
     }
 }

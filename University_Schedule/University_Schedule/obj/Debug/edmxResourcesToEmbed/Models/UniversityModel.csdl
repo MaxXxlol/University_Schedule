@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UniversityDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="CourseSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Teacher_Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="TeacherSet" Relationship="Self.FK_CourseTeacher" FromRole="CourseSet" ToRole="TeacherSet" />
+    <NavigationProperty Name="StudentSet" Relationship="Self.CourseStudent" FromRole="CourseSet" ToRole="StudentSet" />
+  </EntityType>
+  <EntityType Name="StudentSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FIO" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Grade" Type="Int32" />
+    <NavigationProperty Name="CourseSet" Relationship="Self.CourseStudent" FromRole="StudentSet" ToRole="CourseSet" />
+  </EntityType>
+  <EntityType Name="TeacherSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FIO" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="CourseSet" Relationship="Self.FK_CourseTeacher" FromRole="TeacherSet" ToRole="CourseSet" />
+  </EntityType>
+  <Association Name="FK_CourseTeacher">
+    <End Role="TeacherSet" Type="Self.TeacherSet" Multiplicity="1" />
+    <End Role="CourseSet" Type="Self.CourseSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TeacherSet">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CourseSet">
+        <PropertyRef Name="Teacher_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CourseStudent">
+    <End Role="CourseSet" Type="Self.CourseSet" Multiplicity="*" />
+    <End Role="StudentSet" Type="Self.StudentSet" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="UniversityDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="CourseSet" EntityType="Self.CourseSet" />
+    <EntitySet Name="StudentSet" EntityType="Self.StudentSet" />
+    <EntitySet Name="TeacherSet" EntityType="Self.TeacherSet" />
+    <AssociationSet Name="FK_CourseTeacher" Association="Self.FK_CourseTeacher">
+      <End Role="TeacherSet" EntitySet="TeacherSet" />
+      <End Role="CourseSet" EntitySet="CourseSet" />
+    </AssociationSet>
+    <AssociationSet Name="CourseStudent" Association="Self.CourseStudent">
+      <End Role="CourseSet" EntitySet="CourseSet" />
+      <End Role="StudentSet" EntitySet="StudentSet" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

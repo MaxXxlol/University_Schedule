@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UniversityDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="CourseSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Teacher_Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="CourseStudent">
+    <Key>
+      <PropertyRef Name="Course_Id" />
+      <PropertyRef Name="Student_Id" />
+    </Key>
+    <Property Name="Course_Id" Type="int" Nullable="false" />
+    <Property Name="Student_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="StudentSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FIO" Type="nvarchar" MaxLength="500" />
+    <Property Name="Grade" Type="int" />
+  </EntityType>
+  <EntityType Name="TeacherSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FIO" Type="nvarchar" MaxLength="500" />
+  </EntityType>
+  <Association Name="FK_CourseStudent_Course">
+    <End Role="CourseSet" Type="Self.CourseSet" Multiplicity="1" />
+    <End Role="CourseStudent" Type="Self.CourseStudent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CourseSet">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CourseStudent">
+        <PropertyRef Name="Course_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CourseStudent_Student">
+    <End Role="StudentSet" Type="Self.StudentSet" Multiplicity="1" />
+    <End Role="CourseStudent" Type="Self.CourseStudent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StudentSet">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CourseStudent">
+        <PropertyRef Name="Student_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CourseTeacher">
+    <End Role="TeacherSet" Type="Self.TeacherSet" Multiplicity="1" />
+    <End Role="CourseSet" Type="Self.CourseSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TeacherSet">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CourseSet">
+        <PropertyRef Name="Teacher_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="UniversityDBModelStoreContainer">
+    <EntitySet Name="CourseSet" EntityType="Self.CourseSet" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CourseStudent" EntityType="Self.CourseStudent" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="StudentSet" EntityType="Self.StudentSet" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TeacherSet" EntityType="Self.TeacherSet" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_CourseStudent_Course" Association="Self.FK_CourseStudent_Course">
+      <End Role="CourseSet" EntitySet="CourseSet" />
+      <End Role="CourseStudent" EntitySet="CourseStudent" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CourseStudent_Student" Association="Self.FK_CourseStudent_Student">
+      <End Role="StudentSet" EntitySet="StudentSet" />
+      <End Role="CourseStudent" EntitySet="CourseStudent" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CourseTeacher" Association="Self.FK_CourseTeacher">
+      <End Role="TeacherSet" EntitySet="TeacherSet" />
+      <End Role="CourseSet" EntitySet="CourseSet" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

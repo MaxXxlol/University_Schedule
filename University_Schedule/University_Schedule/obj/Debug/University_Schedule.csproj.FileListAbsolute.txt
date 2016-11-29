@@ -52,3 +52,7 @@ F:\University_Schedule\University_Schedule\University_Schedule\bin\System.Web.Ht
 F:\University_Schedule\University_Schedule\University_Schedule\obj\Debug\University_Schedule.csprojResolveAssemblyReference.cache
 F:\University_Schedule\University_Schedule\University_Schedule\obj\Debug\University_Schedule.dll
 F:\University_Schedule\University_Schedule\University_Schedule\obj\Debug\University_Schedule.pdb
+F:\University_Schedule\University_Schedule\University_Schedule\bin\EntityFramework.dll
+F:\University_Schedule\University_Schedule\University_Schedule\bin\EntityFramework.SqlServer.dll
+F:\University_Schedule\University_Schedule\University_Schedule\bin\EntityFramework.xml
+F:\University_Schedule\University_Schedule\University_Schedule\bin\EntityFramework.SqlServer.xml
