@@ -12,171 +12,360 @@ namespace University_Schedule.Controllers
     public class UniversityController : ApiController
     {
         UniversityDBEntities db = new UniversityDBEntities();
-        
+
+        // GET: api/University/Student/id
+        [Route("api/University/Student/{id}")]
+        public object GetStudent(int id)
+        {
+            try
+            {
+                var tmp = db.StudentSet.Find(id);
+                object student = new { Id = tmp.Id, FIO = tmp.FIO, Grade = tmp.Grade, Course = tmp.CourseSet };
+                return student;
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
+            
+        }
+
+        // GET: api/University/Teacher/id
+        [Route("api/University/Teacher/{id}")]
+        public object GetTeacher(int id)
+        {
+            try
+            {
+                var tmp = db.TeacherSet.Find(id);
+                object teacher = new { Id = tmp.Id, FIO = tmp.FIO, Course = tmp.CourseSet };
+                return teacher;
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        // GET: api/University/Course/id
+        [Route("api/University/Course/{id}")]
+        public object GetCourse(int id)
+        {
+            try
+            {
+                var tmp = db.CourseSet.Find(id);
+                object course = new { Id = tmp.Id, teacher = tmp.TeacherSet, students = tmp.StudentSet };
+                return course;
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
         // GET: api/University/StudentCourse
         [Route("api/University/StudentCourse")]
         public object[] GetStudentCourse()
         {
-            var tmp = db.StudentSet;
-            List<object> str = new List<object>();
-            foreach (var x in tmp)
+            try
             {
-                str.Add(new { FIO = x.FIO, Course = x.CourseSet });
+                var tmp = db.StudentSet;
+                List<object> str = new List<object>();
+                foreach (var x in tmp)
+                {
+                    str.Add(new { FIO = x.FIO, Course = x.CourseSet });
+                }
+                return str.ToArray();
             }
-            return str.ToArray();
+            catch(Exception ex)
+            {
+                return new[] {ex.Message};
+            }
         }
 
         // GET: api/University/TeacherCourse
         [Route("api/University/TeacherCourse")]
         public object[] GetTeacherCourse()
         {
-            var tmp = db.TeacherSet;
-            List<object> str = new List<object>();
-            foreach (var x in tmp)
+            try
             {
-                str.Add(new { Id = x.Id, FIO = x.FIO, Course = x.CourseSet });
+                var tmp = db.TeacherSet;
+                List<object> str = new List<object>();
+                foreach (var x in tmp)
+                {
+                    str.Add(new { Id = x.Id, FIO = x.FIO, Course = x.CourseSet });
+                }
+                return str.ToArray();
             }
-            return str.ToArray();
+            catch(Exception ex)
+            {
+                return new[] { ex.Message };
+            }
         }
 
         // GET: api/University/StudentGrade
         [Route("api/University/StudentGrade")]
         public object[] GetStudentGrade()
         {
-            var tmp = db.StudentSet;
-            List<object> str = new List<object>();
-            foreach (var x in tmp)
+            try
             {
-                str.Add(new { FIO = x.FIO, Grade = x.Grade });
+                var tmp = db.StudentSet;
+                List<object> str = new List<object>();
+                foreach (var x in tmp)
+                {
+                    str.Add(new { FIO = x.FIO, Grade = x.Grade });
+                }
+                return str.ToArray();
             }
-            return str.ToArray();
+            catch(Exception ex)
+            {
+                return new[] { ex.Message };
+            }
         }
 
         // GET: api/University/StudentInfo
         [Route("api/University/StudentInfo")]
         public object[] GetStudentInfo()
         {
-            var tmp = db.StudentSet;
-            List<object> str = new List<object>();
-            foreach (var x in tmp.OrderBy(y => y.FIO))
+            try
             {
-                str.Add(new { Id = x.Id, FIO = x.FIO, Grade = x.Grade, Course = x.CourseSet });
+                var tmp = db.StudentSet;
+                List<object> str = new List<object>();
+                foreach (var x in tmp.OrderBy(y => y.FIO))
+                {
+                    str.Add(new { Id = x.Id, FIO = x.FIO, Grade = x.Grade, Course = x.CourseSet });
+                }
+                return str.ToArray();
             }
-            return str.ToArray();
+            catch(Exception ex)
+            {
+                return new[] { ex.Message };
+            }
         }
 
         // GET: api/University/CourseWith5Student
         [Route("api/University/CourseWith5Student")]
         public object[] GetCourseWith5Student()
         {
-            var tmp = db.CourseSet;
-            List<object> str = new List<object>();
-            foreach (var x in tmp.Where(x=>x.StudentSet.Count>2))
+            try
             {
-                str.Add(new { Name = x.Name, Teacher = x.TeacherSet });
+                var tmp = db.CourseSet;
+                List<object> str = new List<object>();
+                foreach (var x in tmp.Where(x => x.StudentSet.Count >= 5 ))
+                {
+                    str.Add(new { Name = x.Name, Teacher = x.TeacherSet });
+                }
+                return str.ToArray();
             }
-            return str.ToArray();
+            catch(Exception ex)
+            {
+                return new[] { ex.Message };
+            }
         }
 
         // GET: api/University/TeacherWith1Course
         [Route("api/University/TeacherWith1Course")]
         public object[] GetTeacherWith1Course()
         {
-            var tmp = db.TeacherSet;
-            List<object> str = new List<object>();
-            foreach (var x in tmp.Where(x => x.CourseSet.Count == 1))
+            try
             {
-                str.Add(new { FIO = x.FIO, Course = x.CourseSet });
+                var tmp = db.TeacherSet;
+                List<object> str = new List<object>();
+                foreach (var x in tmp.Where(x => x.CourseSet.Count == 1))
+                {
+                    str.Add(new { FIO = x.FIO, Course = x.CourseSet });
+                }
+                return str.ToArray();
             }
-            return str.ToArray();
+            catch(Exception ex)
+            {
+                return new[] { ex.Message };
+            }
         }
 
         // POST: api/University/NewStudent
         [Route("api/University/NewStudent")]
-        public void PostNewStudent([FromBody]JObject value)
+        public string PostNewStudent([FromBody]JObject value)
         {
-            db.StudentSet.Add(new StudentSet(value["Id"].ToObject<int>(), value["FIO"].ToString(), value["Grade"].ToObject<int>()));
-            db.SaveChanges();
+            try
+            {
+                db.StudentSet.Add(new StudentSet(value["Id"].ToObject<int>(), value["FIO"].ToString(), value["Grade"].ToObject<int>()));
+                db.SaveChanges();
+                return "Done!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         // POST: api/University/AddCourseToStudent
         [Route("api/University/AddCourseToStudent")]
-        public void PostAddCourseToStudent([FromBody]JObject value)
+        public string PostAddCourseToStudent([FromBody]JObject value)
         {
-            var subj = db.StudentSet.Find(value["SubjectId"].ToObject<int>());
-            subj.AddCourse(db.CourseSet.Find(value["CourseId"].ToObject<int>()));
-            db.SaveChanges();
+            try
+            {
+                var subj = db.StudentSet.Find(value["SubjectId"].ToObject<int>());
+                subj.AddCourse(db.CourseSet.Find(value["CourseId"].ToObject<int>()));
+                db.SaveChanges();
+                return "Done!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         // POST: api/University/NewTeacher
         [Route("api/University/NewTeacher")]
-        public void PostNewTeacher([FromBody]JObject value)
+        public string PostNewTeacher([FromBody]JObject value)
         {
-            db.TeacherSet.Add(new TeacherSet(value["Id"].ToObject<int>(), value["FIO"].ToString()));
-            db.SaveChanges();
+            try
+            {
+                db.TeacherSet.Add(new TeacherSet(value["Id"].ToObject<int>(), value["FIO"].ToString()));
+                db.SaveChanges();
+                return "Done!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         // POST: api/University/AddCourseToTeacher
         [Route("api/University/AddCourseToTeacher")]
-        public void PostAddCourseToTeacher([FromBody]JObject value)
+        public string PostAddCourseToTeacher([FromBody]JObject value)
         {
-            var subj = db.TeacherSet.Find(value["SubjectId"].ToObject<int>());
-            subj.AddCourse(db.CourseSet.Find(value["CourseId"].ToObject<int>()));
-            db.SaveChanges();
+            try
+            {
+                var subj = db.TeacherSet.Find(value["SubjectId"].ToObject<int>());
+                subj.AddCourse(db.CourseSet.Find(value["CourseId"].ToObject<int>()));
+                db.SaveChanges();
+                return "Done!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         // POST: api/University/NewCourse
         [Route("api/University/NewCourse")]
-        public void PostNewCourse([FromBody]JObject value)
+        public string PostNewCourse([FromBody]JObject value)
         {
-            db.CourseSet.Add(new CourseSet(value["Id"].ToObject<int>(), value["TeacherId"].ToObject<int>(), value["Name"].ToString()));
-            db.SaveChanges();
+            try
+            {
+                db.CourseSet.Add(new CourseSet(value["Id"].ToObject<int>(), value["TeacherId"].ToObject<int>(), value["Name"].ToString()));
+                db.SaveChanges();
+                return "Done!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         // PUT: api/University/UpdateStudent
         [Route("api/University/UpdateStudent")]
-        public void PutUpdateStudent([FromBody]JObject value)
+        public string PutUpdateStudent([FromBody]JObject value)
         {
-            db.StudentSet.Find(value["Id"].ToObject<int>()).UpdateStudentSet(value["FIO"].ToString(), value["Grade"].ToObject<int>());
-            db.SaveChanges();
+            try
+            {
+                db.StudentSet.Find(value["Id"].ToObject<int>()).UpdateStudentSet(value["FIO"].ToString(), value["Grade"].ToObject<int>());
+                db.SaveChanges();
+                return "Updated!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         // PUT: api/University/UpdateTeacher
         [Route("api/University/UpdateTeacher")]
-        public void PutUpdateTeacher([FromBody]JObject value)
+        public string PutUpdateTeacher([FromBody]JObject value)
         {
-            db.TeacherSet.Find(value["Id"].ToObject<int>()).UpdateTeacherSet(value["FIO"].ToString());
+            try
+            {
+                db.TeacherSet.Find(value["Id"].ToObject<int>()).UpdateTeacherSet(value["FIO"].ToString());
+                db.SaveChanges();
+                return "Updated!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         // PUT: api/University/UpdateCourse
         [Route("api/University/UpdateCourse")]
-        public void PutUpdateCourse([FromBody]JObject value)
+        public string PutUpdateCourse([FromBody]JObject value)
         {
-            db.CourseSet.Find(value["Id"].ToObject<int>()).UpdateCourseSet(value["TeacherId"].ToObject<int>(), value["Name"].ToString());
+            try
+            {
+                db.CourseSet.Find(value["Id"].ToObject<int>()).UpdateCourseSet(value["TeacherId"].ToObject<int>(), value["Name"].ToString());
+                db.SaveChanges();
+                return "Updated!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         // DELETE: api/University/DeleteStudent
         [Route("api/University/DeleteStudent")]
-        public void DeleteDeleteStudent([FromBody]JObject value)
+        public string DeleteDeleteStudent([FromBody]JObject value)
         {
-            db.StudentSet.Remove(db.StudentSet.Find(value["Id"].ToObject<int>()));
-            db.SaveChanges();
+            try
+            {
+                int id = value["Id"].ToObject<int>();
+                var subject = db.StudentSet.Find(id);
+                subject.CourseSet.Clear();
+                db.StudentSet.Remove(db.StudentSet.Find(id));
+                db.SaveChanges();
+                return "Deleted!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         // DELETE: api/University/DeleteTeacher
         [Route("api/University/DeleteTeacher")]
-        public void DeleteDeleteTeacher([FromBody]JObject value)
+        public string DeleteDeleteTeacher([FromBody]JObject value)
         {
-            db.TeacherSet.Remove(db.TeacherSet.Find(value["Id"].ToObject<int>()));
+            try
+            {
+                int id = value["Id"].ToObject<int>();
+                var subject = db.TeacherSet.Find(id);
+                subject.CourseSet.Clear();
+                db.TeacherSet.Remove(db.TeacherSet.Find(id));
+                db.SaveChanges();
+                return "Deleted!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         // DELETE: api/University/DeleteCourse
         [Route("api/University/DeleteCourse")]
-        public void DeleteDeleteCourse([FromBody]JObject value)
+        public string DeleteDeleteCourse([FromBody]JObject value)
         {
-            db.CourseSet.Remove(db.CourseSet.Find(value["Id"].ToObject<int>()));
+            try
+            {
+                int id = value["Id"].ToObject<int>();
+                var subject = db.CourseSet.Find(id);
+                subject.StudentSet.Clear();
+                db.CourseSet.Remove(db.CourseSet.Find(id));
+                db.SaveChanges();
+                return "Deleted!";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
-
-
     }
 }
