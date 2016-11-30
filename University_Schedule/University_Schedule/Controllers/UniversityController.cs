@@ -25,6 +25,7 @@ namespace University_Schedule.Controllers
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.NotFound);
                 return ex.Message;
             }
             
@@ -42,6 +43,7 @@ namespace University_Schedule.Controllers
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.NotFound);
                 return ex.Message;
             }
         }
@@ -57,13 +59,14 @@ namespace University_Schedule.Controllers
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.NotFound);
                 return ex.Message;
             }
         }
 
-        // GET: api/University/StudentCourse
-        [Route("api/University/StudentCourse")]
-        public object[] GetStudentCourse()
+        // GET: api/University/Student
+        [Route("api/University/Student")]
+        public object[] GetStudent()
         {
             try
             {
@@ -77,13 +80,14 @@ namespace University_Schedule.Controllers
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.NotFound);
                 return new[] {ex.Message};
             }
         }
 
-        // GET: api/University/TeacherCourse
-        [Route("api/University/TeacherCourse")]
-        public object[] GetTeacherCourse()
+        // GET: api/University/Teacher
+        [Route("api/University/Teacher")]
+        public object[] GetTeacher()
         {
             try
             {
@@ -97,6 +101,7 @@ namespace University_Schedule.Controllers
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.NotFound);
                 return new[] { ex.Message };
             }
         }
@@ -117,6 +122,7 @@ namespace University_Schedule.Controllers
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.NotFound);
                 return new[] { ex.Message };
             }
         }
@@ -137,6 +143,7 @@ namespace University_Schedule.Controllers
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.NotFound);
                 return new[] { ex.Message };
             }
         }
@@ -157,6 +164,7 @@ namespace University_Schedule.Controllers
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.NotFound);
                 return new[] { ex.Message };
             }
         }
@@ -177,6 +185,7 @@ namespace University_Schedule.Controllers
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.NotFound);
                 return new[] { ex.Message };
             }
         }
@@ -187,12 +196,14 @@ namespace University_Schedule.Controllers
         {
             try
             {
+                this.StatusCode(HttpStatusCode.Created);
                 db.StudentSet.Add(new StudentSet(value["Id"].ToObject<int>(), value["FIO"].ToString(), value["Grade"].ToObject<int>()));
                 db.SaveChanges();
                 return "Done!";
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.BadRequest);
                 return ex.Message;
             }
         }
@@ -203,6 +214,7 @@ namespace University_Schedule.Controllers
         {
             try
             {
+                this.StatusCode(HttpStatusCode.Created);
                 var subj = db.StudentSet.Find(value["SubjectId"].ToObject<int>());
                 subj.AddCourse(db.CourseSet.Find(value["CourseId"].ToObject<int>()));
                 db.SaveChanges();
@@ -210,6 +222,7 @@ namespace University_Schedule.Controllers
             }
             catch(Exception ex)
             {
+                this.StatusCode(HttpStatusCode.BadRequest);
                 return ex.Message;
             }
         }
